@@ -170,14 +170,44 @@ mysqli_close($conn);
             <input type="number" name="amount" placeholder="Enter amount" required min="0" step="any">
 
             <label for="userid_for">User for Transaction:</label>
-            <select name="userid_for" class="select2" required>
-                <?php foreach ($users as $user): ?>
-                    <option value="<?= htmlspecialchars($user['userid']) ?>">
-                        <?= htmlspecialchars($user['display_name']) ?>)
-                    </option>
-                <?php endforeach; ?>
+            <select name="userid_for" id="userid_for" class="select2" required>
+                <!-- Options will be loaded dynamically via AJAX -->
             </select>
 
+            <!-- Scripts -->
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+            <script>
+                $(document).ready(function() {
+                    $('#userid_for').select2({
+                        placeholder: "Search for a user...",
+                        allowClear: true,
+                        ajax: {
+                            url: 'fetch_user.php',
+                            type: 'GET',
+                            dataType: 'json',
+                            delay: 250,
+                            data: function(params) {
+                                return {
+                                    search: params.term
+                                };
+                            },
+                            processResults: function(data) {
+                                return {
+                                    results: data.map(function(user) {
+                                        return {
+                                            id: user.userid,
+                                            text: user.display_name
+                                        };
+                                    })
+                                };
+                            },
+                            cache: true
+                        }
+                    });
+                });
+            </script>
+            
             <input type="submit" value="Add Transaction">
         </form>
     </div>
@@ -187,18 +217,6 @@ mysqli_close($conn);
         <p>MoneyGuru by Ganpat Patel, Adnan Ali, Musa Ummar, Jatinkumar Keshabhai Parmar</p>
         <p>Project Goal: A web app to track money lending and borrowing transactions</p>
     </div>
-
-    <!-- Scripts -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            $('.select2').select2({
-                placeholder: "Search for a user...",
-                allowClear: true
-            });
-        });
-    </script>
 
 </body>
 </html>

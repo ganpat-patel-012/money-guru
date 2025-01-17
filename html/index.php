@@ -20,18 +20,16 @@ $sql_summary = "
 $stmt_summary = mysqli_prepare($conn, $sql_summary);
 
 if ($stmt_summary) {
-    mysqli_stmt_execute($stmt_summary); // No parameters to bind, directly execute
+    mysqli_stmt_execute($stmt_summary);
     $result_summary = mysqli_stmt_get_result($stmt_summary);
     $summary = mysqli_fetch_assoc($result_summary);
     mysqli_stmt_close($stmt_summary);
 
-    // Fetch results safely
     $total_borrow = $summary['total_borrow'] ?? 0;
     $total_give = $summary['total_give'] ?? 0;
 
-    // Calculations (Remove unused variables)
-    $total_you_owe = $total_borrow; // Adjusted calculation
-    $total_others_owe = $total_give; // Adjusted calculation
+    $total_you_owe = $total_borrow;
+    $total_others_owe = $total_give;
     $final_state = $total_others_owe - $total_you_owe;
 } else {
     die("Error preparing statement: " . mysqli_error($conn));
@@ -111,7 +109,7 @@ if ($stmt_summary) {
             display: flex;
             justify-content: center;
             gap: 20px;
-            margin-top: 30px;
+            margin: 30px 0px 30px 0px;
         }
 
         .auth-buttons .button {
