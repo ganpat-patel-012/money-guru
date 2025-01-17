@@ -2,7 +2,6 @@
 session_start();
 
 if (!isset($_SESSION['userid'])) {
-    // Redirect to login page if not logged in
     header("Location: login.php");
     exit();
 }
@@ -269,6 +268,7 @@ mysqli_close($conn);
             justify-content: space-between;
             width: 100%;
             margin-top: 20px;
+            margin-bottom: 20px;
         }
 
         .user-info {
@@ -369,6 +369,7 @@ mysqli_close($conn);
         <!-- New Button Container -->
         <div class="button-container">
             <a href="add_transaction.php" class="button">Add Transaction</a>
+            <a href="modify_register.php" class="button">Edit Profile</a>
             <a href="logout.php" class="logout-btn">Logout</a>
         </div>
     </div>

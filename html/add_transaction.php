@@ -5,7 +5,7 @@ if (!isset($_SESSION['userid'])) {
     header("Location: login.php");
     exit();
 }
-
+//Musa Rocks
 $servername = "db";  
 $username = "root";   
 $password = "root_password";  

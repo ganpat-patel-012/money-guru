@@ -1,3 +1,45 @@
+<?php
+
+$servername = "db"; 
+$username = "root";
+$password = "root_password"; 
+$dbname = "moneyguru";
+
+$conn = mysqli_connect($servername, $username, $password, $dbname);
+
+if (!$conn) {
+    die("Connection failed: " . mysqli_connect_error());
+}
+
+$sql_summary = "
+    SELECT 
+        SUM(CASE WHEN type = 'borrow' AND settle = 0 THEN amount ELSE 0 END) AS total_borrow,
+        SUM(CASE WHEN type = 'lend' AND settle = 0 THEN amount ELSE 0 END) AS total_give
+    FROM Transactions";
+
+$stmt_summary = mysqli_prepare($conn, $sql_summary);
+
+if ($stmt_summary) {
+    mysqli_stmt_execute($stmt_summary); // No parameters to bind, directly execute
+    $result_summary = mysqli_stmt_get_result($stmt_summary);
+    $summary = mysqli_fetch_assoc($result_summary);
+    mysqli_stmt_close($stmt_summary);
+
+    // Fetch results safely
+    $total_borrow = $summary['total_borrow'] ?? 0;
+    $total_give = $summary['total_give'] ?? 0;
+
+    // Calculations (Remove unused variables)
+    $total_you_owe = $total_borrow; // Adjusted calculation
+    $total_others_owe = $total_give; // Adjusted calculation
+    $final_state = $total_others_owe - $total_you_owe;
+} else {
+    die("Error preparing statement: " . mysqli_error($conn));
+}
+
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -95,6 +137,42 @@
             padding: 15px;
             font-size: 0.9em;
         }
+
+        .cards {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            flex: 1;
+            margin: 0 10px;
+            padding: 20px;
+            text-align: center;
+            background-color: #f4f4f9;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .card h3 {
+            margin: 0;
+            font-size: 1.5em;
+        }
+
+        .card p {
+            margin: 10px 0 0;
+            font-size: 1.2em;
+            color: #333;
+        }
+
+        .container .positive {
+            color: green;
+        }
+
+        .container .negative {
+            color: red;
+        }
     </style>
 </head>
 <body>
@@ -121,6 +199,24 @@
             <p>Mark transactions as settled once the debts are cleared.</p>
         </div>
     </div>
+
+    <!-- Summary Cards -->
+    <div class="cards">
+            <div class="card">
+                <h3>Total Borrowed</h3>
+                <p class="negative">€<?php echo number_format($total_you_owe, 2); ?></p>
+            </div>
+            <div class="card">
+                <h3>Total Lent</h3>
+                <p class="positive">€<?php echo number_format($total_others_owe, 2); ?></p>
+            </div>
+            <div class="card">
+                <h3>Final State</h3>
+                <p class="<?php echo $final_state >= 0 ? 'positive' : 'negative'; ?>">
+                    €<?php echo number_format($final_state, 2); ?>
+                </p>
+            </div>
+        </div>
 
     <div class="auth-buttons">
         <a href="register.php" class="button">Register</a>
