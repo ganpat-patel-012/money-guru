@@ -269,6 +269,7 @@ mysqli_close($conn);
             justify-content: space-between;
             width: 100%;
             margin-top: 20px;
+            margin-bottom: 20px;
         }
 
         .user-info {
@@ -369,6 +370,7 @@ mysqli_close($conn);
         <!-- New Button Container -->
         <div class="button-container">
             <a href="add_transaction.php" class="button">Add Transaction</a>
+            <a href="modify_register.php" class="button">Edit Profile</a>
             <a href="logout.php" class="logout-btn">Logout</a>
         </div>
     </div>
