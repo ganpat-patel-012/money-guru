@@ -7,10 +7,10 @@ if (!isset($_SESSION['userid'])) {
     exit();
 }
 
-$servername = "db";  // Docker MySQL service name
-$username = "root";   // Database username
-$password = "root_password";  // MySQL root password
-$dbname = "moneyguru";  // Database name
+$servername = "db"; 
+$username = "root";
+$password = "root_password"; 
+$dbname = "moneyguru";
 
 $conn = mysqli_connect($servername, $username, $password, $dbname);
 
